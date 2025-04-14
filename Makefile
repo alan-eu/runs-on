@@ -1,7 +1,7 @@
-VERSION=v2.7.2
+VERSION=v2.7.2-alan1
 VERSION_DEV=$(VERSION)-dev
 MAJOR_VERSION=v2
-REGISTRY=public.ecr.aws/c5h5o9k1/runs-on/runs-on
+REGISTRY=public.ecr.aws/y3b3f3c6/alan/runs-on
 SHELL:=/bin/bash
 
 # Override any of these variables in .env.local
@@ -48,7 +48,7 @@ release:
 	TAG=$(VERSION) ./scripts/generate-release.sh
 
 login:
-	AWS_PROFILE=runs-on-releaser aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin $(REGISTRY)
+	aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin $(REGISTRY)
 
 build-push: login
 	docker buildx build --push \
@@ -68,7 +68,7 @@ dev: login
 		-t $(REGISTRY):$(VERSION_DEV) .
 	@echo ""
 	@echo "Pushed to $(REGISTRY):$(VERSION_DEV)"
-	AWS_PROFILE=runs-on-releaser aws s3 cp ./cloudformation/template-dev.yaml s3://runs-on/cloudformation/
+	aws s3 cp ./cloudformation/template-dev.yaml s3://runs-on/cloudformation/
 
 # generates a stage release
 stage: build-push
